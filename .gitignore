@@ -20,7 +20,7 @@ Thumbs.db
 *.temp
 
 # Generated icons (if using automated generation)
-icons/*.png
+# icons/*.png
 
 # Chrome extension package
 *.crx
