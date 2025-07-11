@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Codex Watcher - Manual Test Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    h1 { color: #1a73e8; }
+    .chat-container {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .message {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    .user-message {
+      background: #e3f2fd;
+      text-align: right;
+    }
+    .assistant-message {
+      background: #f5f5f5;
+      text-align: left;
+    }
+    .controls {
+      margin: 20px 0;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 4px;
+      background: #1a73e8;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1557b0;
+    }
+    input {
+      padding: 10px;
+      width: 300px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .test-scenarios {
+      background: #fff3cd;
+      border: 1px solid #ffeaa7;
+      padding: 15px;
+      border-radius: 4px;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 Codex Watcher Test Page</h1>
+  
+  <div class="test-scenarios">
+    <h3>⚠️ Test Environment</h3>
+    <p>This page simulates the Ford AI Notebook chat interface for testing the Codex Watcher extension.</p>
+    <p><strong>Note:</strong> The extension is configured to only work on https://ai-notebook.ford.com/*</p>
+    <p>To test on this page, temporarily modify manifest.json to include this file's URL in content_scripts matches.</p>
+  </div>
+
+  <div class="controls">
+    <h3>Test Controls</h3>
+    <input type="text" id="messageInput" placeholder="Type a test message...">
+    <button onclick="addUserMessage()">Add User Message</button>
+    <button onclick="addAssistantMessage()">Add AI Response</button>
+    <button onclick="addMultipleMessages()">Add 10 Messages</button>
+    <button onclick="clearChat()">Clear Chat</button>
+  </div>
+
+  <div class="chat-container" id="chatContainer">
+    <h3>Chat Messages</h3>
+    <div id="messages"></div>
+  </div>
+
+  <div class="controls">
+    <h3>DOM Structure Tests</h3>
+    <button onclick="testDifferentStructure()">Test Alternative DOM</button>
+    <button onclick="addCodeBlock()">Add Code Block Message</button>
+    <button onclick="addLongMessage()">Add Long Message</button>
+    <button onclick="addSpecialChars()">Add Special Characters</button>
+  </div>
+
+  <script>
+    let messageCount = 0;
+
+    function addUserMessage() {
+      const input = document.getElementById('messageInput');
+      const text = input.value || `Test user message ${++messageCount}`;
+      addMessage(text, 'user');
+      input.value = '';
+    }
+
+    function addAssistantMessage() {
+      const text = `This is AI response ${++messageCount}. The extension should capture this message.`;
+      addMessage(text, 'assistant');
+    }
+
+    function addMessage(text, role) {
+      const messagesDiv = document.getElementById('messages');
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${role}-message`;
+      messageDiv.textContent = text;
+      messageDiv.dataset.role = role;
+      messagesDiv.appendChild(messageDiv);
+      
+      // Trigger DOM change event
+      messageDiv.dispatchEvent(new Event('DOMNodeInserted', { bubbles: true }));
+    }
+
+    function addMultipleMessages() {
+      for (let i = 0; i < 10; i++) {
+        setTimeout(() => {
+          if (i % 2 === 0) {
+            addMessage(`Rapid test message ${i + 1}`, 'user');
+          } else {
+            addMessage(`Rapid response ${i + 1}`, 'assistant');
+          }
+        }, i * 100);
+      }
+    }
+
+    function clearChat() {
+      document.getElementById('messages').innerHTML = '';
+      messageCount = 0;
+    }
+
+    function testDifferentStructure() {
+      const messagesDiv = document.getElementById('messages');
+      
+      // Test with different class names
+      const div1 = document.createElement('div');
+      div1.className = 'chat-message';
+      div1.textContent = 'Message with chat-message class';
+      messagesDiv.appendChild(div1);
+      
+      const div2 = document.createElement('div');
+      div2.className = 'message-bubble';
+      div2.textContent = 'Message with message-bubble class';
+      messagesDiv.appendChild(div2);
+    }
+
+    function addCodeBlock() {
+      const code = `function testFunction() {
+  console.log("This is a code block");
+  return { status: "success", timestamp: new Date() };
+}`;
+      addMessage(`Here's some code:\n\n${code}`, 'assistant');
+    }
+
+    function addLongMessage() {
+      const longText = 'Lorem ipsum dolor sit amet, '.repeat(50) + 'consectetur adipiscing elit.';
+      addMessage(longText, 'user');
+    }
+
+    function addSpecialChars() {
+      const specialText = 'Special chars: <>&"\'`!@#$%^&*(){}[]|\\:;,.<>?/~₹€£¥';
+      addMessage(specialText, 'assistant');
+    }
+
+    // Add initial messages
+    window.onload = () => {
+      addMessage('Welcome to the test page! The extension should start capturing messages.', 'assistant');
+      addMessage('Hello, this is my first test message.', 'user');
+    };
+  </script>
+</body>
+</html>

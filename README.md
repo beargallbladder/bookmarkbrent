@@ -2,6 +2,11 @@
 
 A Chrome extension that captures and saves chat history from Ford AI Notebook (https://ai-notebook.ford.com).
 
+## 🌐 Browser Compatibility
+
+✅ **Works on:** Chrome, Edge, Brave, Opera, Vivaldi (All Chromium-based browsers v88+)  
+❌ **Does not work on:** Firefox, Safari, Internet Explorer, Mobile browsers
+
 ## Features
 
 - 🔍 **Automatic Chat Detection**: Uses DOM observation to detect new messages in real-time
@@ -78,11 +83,16 @@ Generate icons by:
 - Works entirely within your browser
 - Respects Ford's security policies
 
+## Testing
+
+See [TEST_PLAN.md](TEST_PLAN.md) for comprehensive testing instructions and browser compatibility details.
+
 ## Troubleshooting
 
 - **Messages not captured**: Check browser console for errors, update DOM selectors
 - **VPN issues**: Extension only works when Ford AI Notebook is accessible
 - **Storage full**: Clear old messages using the Clear button in popup
+- **Browser not supported**: Use Chrome, Edge, or any Chromium-based browser
 
 ## Future Enhancements
 
